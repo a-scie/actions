@@ -54,13 +54,14 @@ runs:
         runner_temp="${RUNNER_TEMP//\\//}"
         tox_config='${{ steps.calculate-tox-info.outputs.tox-config }}'
         tox_config="${tox_config//\\//}"
+        changelog='${{ inputs.changelog-file }}'
+        changelog="${changelog//\\//}"
 
         venv_dir="$(TMPDIR="${runner_temp}" mktemp -d)"
         python -mvenv "${venv_dir}"
         if [[ "$(uname -s)" =~ _NT ]]; then
           # Git bash reports something like: MINGW64_NT-10.0-22621
           source "${venv_dir}/Scripts/activate"
-
         else
           source "${venv_dir}/bin/activate"
         fi
@@ -72,7 +73,7 @@ runs:
 
         $(
           tox -c "${tox_config}" -e changelog -qq -- \
-            --changelog ${{ inputs.changelog-file }} \
+            --changelog "${changelog}" \
             --level ${{ inputs.level }} \
             ${{ inputs.version }}
         )
