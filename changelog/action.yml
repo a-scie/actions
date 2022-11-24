@@ -52,6 +52,9 @@ runs:
       run: |
         # Handle Windows paths for bash, assume \ will only be present as Windows path separators.
         runner_temp="${RUNNER_TEMP//\\//}"
+        tox_config='${{ steps.calculate-tox-info.outputs.tox-config }}'
+        tox_config="${tox_config//\\//}"
+
         venv_dir="$(TMPDIR="${runner_temp}" mktemp -d)"
         python -mvenv "${venv_dir}"
         if [[ "$(uname -s)" =~ _NT ]]; then
@@ -68,7 +71,7 @@ runs:
         ---
 
         $(
-          tox -c ${{ steps.calculate-tox-info.outputs.tox-config }} -e changelog -qq -- \
+          tox -c "${tox_config}" -e changelog -qq -- \
             --changelog ${{ inputs.changelog-file }} \
             --level ${{ inputs.level }} \
             ${{ inputs.version }}
