@@ -29,23 +29,6 @@ runs:
       if: ${{ inputs.setup-python == 'true' }}
       with:
         python-version: 3.11
-    - name: Calculate Tox Version
-      id: calculate-tox-info
-      shell: python
-      run: |
-        import os
-        from configparser import ConfigParser
-
-
-        # N.B.: A raw string is critical to support literal `\` in Windows paths.
-        tox_config = os.path.normpath(os.path.join(r"${{ github.action_path }}", "..", "tox.ini"))
-        cp = ConfigParser()
-        with open(tox_config) as fp:
-            cp.read_file(fp)
-        tox_min_version = cp.get("tox", "minversion")
-        with open(os.environ["GITHUB_OUTPUT"], "a") as gh_output_fp:
-            print(f"tox-min-version={tox_min_version}", file=gh_output_fp)
-            print(f"tox-config={tox_config}", file=gh_output_fp)
     - name: Prepare Changelog
       id: prepare-changelog
       shell: bash
@@ -58,7 +41,7 @@ runs:
         changelog="${changelog//\\//}"
 
         venv_dir="$(TMPDIR="${runner_temp}" mktemp -d)"
-        python -mvenv "${venv_dir}"
+        python3 -mvenv "${venv_dir}"
         if [[ "$(uname -s)" =~ _NT ]]; then
           # Git bash reports something like: MINGW64_NT-10.0-22621
           source "${venv_dir}/Scripts/activate"
@@ -66,7 +49,7 @@ runs:
           source "${venv_dir}/bin/activate"
         fi
         python -mpip install -U pip
-        pip install 'tox==${{ steps.calculate-tox-info.outputs.tox-min-version }}'
+        pip install tox==3.27
         changelog_snippet_path="$(TMPDIR="${runner_temp}" mktemp)"
         cat <<EOF > "${changelog_snippet_path}" 
         ---
