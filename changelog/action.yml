@@ -35,7 +35,7 @@ runs:
       run: |
         # Handle Windows paths for bash, assume \ will only be present as Windows path separators.
         runner_temp="${RUNNER_TEMP//\\//}"
-        tox_config='${{ steps.calculate-tox-info.outputs.tox-config }}'
+        tox_config="${{ github.action_path }}/../tox.ini"
         tox_config="${tox_config//\\//}"
         changelog='${{ inputs.changelog-file }}'
         changelog="${changelog//\\//}"
