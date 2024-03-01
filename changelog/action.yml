@@ -23,7 +23,7 @@ runs:
   using: composite
   steps:
     - name: Setup Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       # N.B.: All inputs are strings despite what it may look like:
       #   https://github.com/actions/runner/issues/1483
       if: ${{ inputs.setup-python == 'true' }}

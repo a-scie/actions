@@ -12,18 +12,18 @@ jobs:
   org-check:
     name: Check GitHub Organization
     if: github.repository_owner == 'a-scie'
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Noop
         run: "true"
   ci:
     name: Tools Checks
     needs: org-check
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: 3.11
       - name: Check Tools
